@@ -64,4 +64,5 @@ dependencies {
 
     // dependency-management-plugin によりバージョン番号が自動で設定されないもの、あるいは最新バージョンを指定したいもの
     compile("org.projectlombok:lombok:1.16.10")
+    compile("org.apache.commons:commons-lang3:3.4")
 }
