@@ -31,9 +31,6 @@ public class RecvMailUsingPOP3BatchRunnerTest {
 
     private final String POP3_USER_MAILADDR = "test@sample.co.jp";
 
-    @Value("${pop3.url}")
-    private String POP3_URL;
-
     @Rule
     @Autowired
     public MailServerResource smtpPop3Server;
