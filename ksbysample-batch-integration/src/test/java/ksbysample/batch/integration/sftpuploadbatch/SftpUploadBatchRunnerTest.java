@@ -1,5 +1,6 @@
 package ksbysample.batch.integration.sftpuploadbatch;
 
+import com.icegreen.greenmail.util.GreenMailUtil;
 import ksbysample.batch.integration.Application;
 import org.junit.Ignore;
 import org.junit.Test;
