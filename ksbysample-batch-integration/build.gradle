@@ -56,7 +56,9 @@ dependencyManagement {
 dependencies {
     // dependency-management-plugin によりバージョン番号が自動で設定されるもの
     // Appendix A. Dependency versions ( http://docs.spring.io/platform/docs/current/reference/htmlsingle/#appendix-dependency-versions ) 参照
+    compile("org.springframework.boot:spring-boot-starter-mail")
     compile('org.springframework.boot:spring-boot-starter-integration')
+    compile('org.springframework.integration:spring-integration-mail')
     compile('org.springframework.integration:spring-integration-sftp')
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.spockframework:spock-core") { exclude module: "groovy-all" }
@@ -65,4 +67,5 @@ dependencies {
     // dependency-management-plugin によりバージョン番号が自動で設定されないもの、あるいは最新バージョンを指定したいもの
     compile("org.projectlombok:lombok:1.16.10")
     compile("org.apache.commons:commons-lang3:3.4")
+    testCompile('com.icegreen:greenmail:1.5.1')
 }
