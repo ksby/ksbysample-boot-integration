@@ -156,6 +156,6 @@ void clearDir(String dirPath) {
 }
 
 void addGit() {
-    def grgit = org.ajoberstar.grgit.Grgit.open(dir: project.projectDir)
+    def grgit = org.ajoberstar.grgit.Grgit.open(dir: project.projectDir.parent)
     grgit.add(patterns: ['.'])
 }
