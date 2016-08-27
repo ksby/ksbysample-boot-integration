@@ -9,7 +9,7 @@ import java.io.File;
 @MessageEndpoint
 public class FileProcessor {
 
-    @ServiceActivator(inputChannel = "inChannel")
+    @ServiceActivator(inputChannel = "excelToDbChannel")
     public void process(Message<File> message) throws Exception {
         File file = message.getPayload();
         System.out.println(file.getAbsolutePath());
