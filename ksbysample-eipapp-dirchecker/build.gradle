@@ -69,8 +69,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("org.spockframework:spock-core") { exclude module: "groovy-all" }
-    testCompile("org.spockframework:spock-spring") { exclude module: "groovy-all" }
+    testCompile("org.spockframework:spock-core")
+    testCompile("org.spockframework:spock-spring")
 
     // dependency-management-plugin によりバージョン番号が自動で設定されないもの、あるいは最新バージョンを指定したいもの
     runtime("${jdbcDriver}")
@@ -79,6 +79,7 @@ dependencies {
     compile("org.projectlombok:lombok:1.16.10")
     compile("org.apache.commons:commons-lang3:3.4")
     compile("org.jxls:jxls-reader:2.0.2")
+    testCompile("org.assertj:assertj-core:3.5.2")
 
     // for Doma-Gen
     domaGenRuntime("org.seasar.doma:doma-gen:2.12.1")
