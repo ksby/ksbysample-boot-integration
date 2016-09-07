@@ -80,6 +80,7 @@ dependencies {
     compile("org.apache.commons:commons-lang3:3.4")
     compile("org.jxls:jxls-reader:2.0.2")
     testCompile("org.assertj:assertj-core:3.5.2")
+    testCompile("org.dbunit:dbunit:2.5.3")
 
     // for Doma-Gen
     domaGenRuntime("org.seasar.doma:doma-gen:2.12.1")
