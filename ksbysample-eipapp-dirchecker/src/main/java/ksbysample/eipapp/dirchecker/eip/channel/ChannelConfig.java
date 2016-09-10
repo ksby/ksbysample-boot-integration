@@ -13,4 +13,9 @@ public class ChannelConfig {
         return new DirectChannel();
     }
 
+    @Bean
+    public MessageChannel excelToDbChannel() {
+        return new DirectChannel();
+    }
+
 }

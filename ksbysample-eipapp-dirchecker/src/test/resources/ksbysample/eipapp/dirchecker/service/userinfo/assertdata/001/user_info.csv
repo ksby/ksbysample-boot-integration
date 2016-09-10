@@ -1,0 +1,3 @@
+user_id,username,password,mail_address,enabled,cnt_badcredentials,expired_account,expired_password
+,yota takahashi,,yota.takahashi@test.co.jp,1,0,,
+,aoi inoue,,aoi.inoue@sample.com,1,0,,

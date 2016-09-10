@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbook>
+    <worksheet name="Sheet1">
+        <section startRow="0" endRow="0">
+        </section>
+        <loop startRow="1" endRow="1" items="userInfoExcelRowList" var="userInfoExcelRow"
+              varType="ksbysample.eipapp.dirchecker.service.userinfo.UserInfoExcelRow">
+            <section startRow="1" endRow="1">
+                <mapping row="1" col="0">userInfoExcelRow.username</mapping>
+                <mapping row="1" col="1">userInfoExcelRow.password</mapping>
+                <mapping row="1" col="2">userInfoExcelRow.mailAddress</mapping>
+                <mapping row="1" col="3">userInfoExcelRow.roles</mapping>
+            </section>
+            <loopbreakcondition>
+                <rowcheck offset="0">
+                    <cellcheck offset="0"></cellcheck>
+                </rowcheck>
+            </loopbreakcondition>
+        </loop>
+    </worksheet>
+</workbook>

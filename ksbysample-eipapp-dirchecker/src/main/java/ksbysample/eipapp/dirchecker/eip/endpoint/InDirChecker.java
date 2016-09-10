@@ -1,5 +1,6 @@
 package ksbysample.eipapp.dirchecker.eip.endpoint;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.integration.annotation.Filter;
 import org.springframework.integration.annotation.InboundChannelAdapter;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Poller;
@@ -89,6 +91,16 @@ public class InDirChecker {
     @InboundChannelAdapter(value = "inChannel", poller = @Poller("checkFilePoller"))
     public Message<File> checkFile() {
         return inDirFileReadingMessageSource.receive();
+    }
+
+    @Filter(inputChannel = "inChannel", outputChannel = "excelToDbChannel")
+    public boolean filter(Message<File> message) {
+        File file = message.getPayload();
+        if (!StringUtils.endsWith(file.getName(), ".xlsx")) {
+            throw new RuntimeException(
+                    String.format("拡張子が .xlsx のファイルではありません ( %s )。", file.getName()));
+        }
+        return true;
     }
 
 }
