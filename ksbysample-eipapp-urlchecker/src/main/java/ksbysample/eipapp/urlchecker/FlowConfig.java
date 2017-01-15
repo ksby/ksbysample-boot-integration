@@ -82,6 +82,8 @@ public class FlowConfig {
                 // というキーの header の値をセットする
                 .enrichHeaders(h -> h.headerFunction(MESSAGE_HEADER_SEQUENCE_SIZE
                         , m -> m.getHeaders().get(MESSAGE_HEADER_LINES_SIZE)))
+                // Message の内容をログに出力する
+                .log()
                 // Message の payload に格納された URL 文字列の値をチェックし、"http://" から始まる場合には urlCheckChannel へ、
                 // そうでない場合には writeFileChannel へ Message を送信する
                 .<String, Boolean>route(p -> p.startsWith("http://")
