@@ -38,12 +38,7 @@ public class FlowConfig {
     private final static String MESSAGE_HEADER_SEQUENCE_SIZE = "sequenceSize";
     private final static String MESSAGE_HEADER_HTTP_STATUS = "httpStatus";
     private final static String MESSAGE_HEADER_FILE_NAME = "file_name";
-
-    private final NullChannel nullChannel;
-
-    public FlowConfig(NullChannel nullChannel) {
-        this.nullChannel = nullChannel;
-    }
+    private final static String MESSAGE_HEADER_FILE_ORIGINALFILE = "file_originalFile";
 
     @Bean
     public MessageChannel urlCheckChannel() {
@@ -174,7 +169,16 @@ public class FlowConfig {
     @Bean
     public IntegrationFlow deleteFileFlow() {
         return IntegrationFlows.from(deleteFileChannel())
-                .channel(nullChannel)
+                // in ディレクトリのファイルを削除する
+                .handle((p, h) -> {
+                    try {
+                        Files.delete(Paths.get(h.get(MESSAGE_HEADER_FILE_ORIGINALFILE).toString()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    // ここで処理が終了するので null を返す
+                    return null;
+                })
                 .get();
     }
 
