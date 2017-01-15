@@ -3,13 +3,17 @@ package ksbysample.eipapp.urlchecker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.channel.NullChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.core.Pollers;
 import org.springframework.integration.file.splitter.FileSplitter;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +33,7 @@ public class FlowConfig {
 
     private final static String MESSAGE_HEADER_LINES_SIZE = "lines.size";
     private final static String MESSAGE_HEADER_SEQUENCE_SIZE = "sequenceSize";
+    private final static String MESSAGE_HEADER_HTTP_STATUS = "httpStatus";
 
     private final NullChannel nullChannel;
 
@@ -49,6 +54,11 @@ public class FlowConfig {
     @Bean
     public Executor taskExecutor() {
         return Executors.newCachedThreadPool();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean
@@ -95,7 +105,27 @@ public class FlowConfig {
     @Bean
     public IntegrationFlow urlCheckFlow() {
         return IntegrationFlows.from(urlCheckChannel())
-                .channel(nullChannel)
+                // スレッドを生成して、以降の処理を別のスレッドで並行処理する
+                .channel(c -> c.executor(taskExecutor()))
+                // Message の payload に格納された URL にアクセスし、HTTP ステータスコードを取得する
+                // 取得した HTTP ステータスコードは Message の header に "httpStatus" というキーでセットする
+                .handle((p, h) -> {
+                    String statusCode;
+                    try {
+                        ResponseEntity<String> response = restTemplate().getForEntity(p.toString(), String.class);
+                        statusCode = response.getStatusCode().toString();
+                    } catch (HttpClientErrorException e) {
+                        statusCode = e.getStatusCode().toString();
+                    } catch (Exception e) {
+                        statusCode = e.getMessage();
+                    }
+                    log.info(statusCode + " : " + p.toString());
+                    return MessageBuilder.withPayload(p)
+                            .setHeader(MESSAGE_HEADER_HTTP_STATUS, statusCode)
+                            .build();
+                })
+                // writeFileChannel へ Message を送信する
+                .channel(writeFileChannel())
                 .get();
     }
 
