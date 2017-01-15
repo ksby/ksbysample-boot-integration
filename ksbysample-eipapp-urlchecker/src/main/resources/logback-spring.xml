@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <if condition='"${spring.profiles.active}" == "product"'>
+        <then>
+            <property name="LOG_FILE" value="${LOG_FILE}"/>
+            <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <encoder>
+                    <pattern>${FILE_LOG_PATTERN}</pattern>
+                </encoder>
+                <file>${LOG_FILE}</file>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}</fileNamePattern>
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+            </appender>
+        </then>
+    </if>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
