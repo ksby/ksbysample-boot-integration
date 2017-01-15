@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -30,10 +32,12 @@ public class FlowConfig {
 
     private final static String URLLISTFILE_IN_DIR = "C:/eipapp/ksbysample-eipapp-urlchecker/in";
     private final static String URLLISTFILE_EXT_PATTERN = "*.txt";
+    private final static String RESULTFILE_OUT_DIR = "C:/eipapp/ksbysample-eipapp-urlchecker/out";
 
     private final static String MESSAGE_HEADER_LINES_SIZE = "lines.size";
     private final static String MESSAGE_HEADER_SEQUENCE_SIZE = "sequenceSize";
     private final static String MESSAGE_HEADER_HTTP_STATUS = "httpStatus";
+    private final static String MESSAGE_HEADER_FILE_NAME = "file_name";
 
     private final NullChannel nullChannel;
 
@@ -48,6 +52,11 @@ public class FlowConfig {
 
     @Bean
     public MessageChannel writeFileChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
+    public MessageChannel deleteFileChannel() {
         return new DirectChannel();
     }
 
@@ -132,6 +141,39 @@ public class FlowConfig {
     @Bean
     public IntegrationFlow writeFileFlow() {
         return IntegrationFlows.from(writeFileChannel())
+                // Message の payload のデータを URL だけから URL,HTTPステータスコード に変更する
+                .handle((p, h) -> MessageBuilder.withPayload(p + "," + h.get(MESSAGE_HEADER_HTTP_STATUS))
+                        .build())
+                // Message が流れる順番をファイルに書かれている順番にする
+                // スレッドを生成して並行処理させていたため、.resequence() を呼ぶ前は順不同になっている
+                .resequence()
+                .log()
+                // 1つの URL につき 1つの Message 、かつ複数 Message になっているのを、
+                // 1つの List に集約して 1 Message に変更する
+                .aggregate()
+                .log()
+                // out ディレクトリに結果ファイルを出力する
+                // 結果ファイルには URL と HTTP ステータスコード を出力する
+                .handle((p, h) -> {
+                    Path outPath = Paths.get(RESULTFILE_OUT_DIR, h.get(MESSAGE_HEADER_FILE_NAME).toString());
+                    @SuppressWarnings("unchecked")
+                    List<String> lines = (List<String>) p;
+                    try {
+                        Files.write(outPath, lines, StandardCharsets.UTF_8
+                                , StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return p;
+                })
+                // deleteFileChannel へ Message を送信する
+                .channel(deleteFileChannel())
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow deleteFileFlow() {
+        return IntegrationFlows.from(deleteFileChannel())
                 .channel(nullChannel)
                 .get();
     }
