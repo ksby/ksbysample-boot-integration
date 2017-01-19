@@ -50,6 +50,7 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom 'io.spring.platform:platform-bom:Athens-SR2'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.RELEASE'
     }
 }
 
@@ -63,6 +64,12 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.spockframework:spock-core")
     testCompile("org.spockframework:spock-spring")
+
+    // org.springframework.cloud:spring-cloud-dependencies によりバージョン番号が自動で設定されるもの
+    // http://projects.spring.io/spring-cloud/ の「Release Trains」参照
+    compile("org.springframework.cloud:spring-cloud-starter-zipkin") {
+        exclude module: 'spring-boot-starter-web'
+    }
 
     // dependency-management-plugin によりバージョン番号が自動で設定されないもの、あるいは最新バージョンを指定したいもの
     compile("org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE")

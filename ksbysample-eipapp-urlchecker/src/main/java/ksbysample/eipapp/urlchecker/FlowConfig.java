@@ -136,8 +136,7 @@ public class FlowConfig {
     public IntegrationFlow writeFileFlow() {
         return IntegrationFlows.from(writeFileChannel())
                 // Message の payload のデータを URL だけから URL,HTTPステータスコード に変更する
-                .handle((p, h) -> MessageBuilder.withPayload(p + "," + h.get(MESSAGE_HEADER_HTTP_STATUS))
-                        .build())
+                .handle((p, h) -> MessageBuilder.withPayload(p + "," + h.get(MESSAGE_HEADER_HTTP_STATUS)).build())
                 // Message が流れる順番をファイルに書かれている順番にする
                 // スレッドを生成して並行処理させていたため、.resequence() を呼ぶ前は順不同になっている
                 .resequence()
