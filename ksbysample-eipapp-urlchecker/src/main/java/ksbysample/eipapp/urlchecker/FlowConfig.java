@@ -88,12 +88,10 @@ public class FlowConfig {
                 .split(new FileSplitter())
                 // スレッドを生成して .headerFilter 以降の処理を更に別のスレッドで並行処理する
                 .channel(c -> c.executor(taskExecutor()))
-                // Message の header から "sequenceSize" というキーの header を削除する
-                .headerFilter(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, false)
                 // Message の header に "sequenceSize" というキーの header を追加し、"originalSequenceSize"
                 // というキーの header の値をセットする
-                .enrichHeaders(h -> h.headerFunction(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE
-                        , m -> m.getHeaders().get(MESSAGE_HEADER_LINES_SIZE)))
+                .enrichHeaders(h -> h.headerExpression(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE
+                        , "headers['lines.size']", true))
                 // Message の内容をログに出力する
                 .log()
                 // Message の payload に格納された URL 文字列の値をチェックし、"http://" から始まる場合には urlCheckChannel へ、
