@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.integration.IntegrationMessageHeaderAccessor;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.core.Pollers;
+import org.springframework.integration.file.FileHeaders;
 import org.springframework.integration.file.splitter.FileSplitter;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
@@ -34,10 +36,7 @@ public class FlowConfig {
     private final static String RESULTFILE_OUT_DIR = "C:/eipapp/ksbysample-eipapp-urlchecker/out";
 
     private final static String MESSAGE_HEADER_LINES_SIZE = "lines.size";
-    private final static String MESSAGE_HEADER_SEQUENCE_SIZE = "sequenceSize";
     private final static String MESSAGE_HEADER_HTTP_STATUS = "httpStatus";
-    private final static String MESSAGE_HEADER_FILE_NAME = "file_name";
-    private final static String MESSAGE_HEADER_FILE_ORIGINALFILE = "file_originalFile";
 
     @Bean
     public MessageChannel urlCheckChannel() {
@@ -90,10 +89,10 @@ public class FlowConfig {
                 // スレッドを生成して .headerFilter 以降の処理を更に別のスレッドで並行処理する
                 .channel(c -> c.executor(taskExecutor()))
                 // Message の header から "sequenceSize" というキーの header を削除する
-                .headerFilter(MESSAGE_HEADER_SEQUENCE_SIZE, false)
+                .headerFilter(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, false)
                 // Message の header に "sequenceSize" というキーの header を追加し、"originalSequenceSize"
                 // というキーの header の値をセットする
-                .enrichHeaders(h -> h.headerFunction(MESSAGE_HEADER_SEQUENCE_SIZE
+                .enrichHeaders(h -> h.headerFunction(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE
                         , m -> m.getHeaders().get(MESSAGE_HEADER_LINES_SIZE)))
                 // Message の内容をログに出力する
                 .log()
@@ -148,7 +147,7 @@ public class FlowConfig {
                 // out ディレクトリに結果ファイルを出力する
                 // 結果ファイルには URL と HTTP ステータスコード を出力する
                 .handle((p, h) -> {
-                    Path outPath = Paths.get(RESULTFILE_OUT_DIR, h.get(MESSAGE_HEADER_FILE_NAME).toString());
+                    Path outPath = Paths.get(RESULTFILE_OUT_DIR, h.get(FileHeaders.FILENAME).toString());
                     @SuppressWarnings("unchecked")
                     List<String> lines = (List<String>) p;
                     try {
@@ -170,7 +169,7 @@ public class FlowConfig {
                 // in ディレクトリのファイルを削除する
                 .handle((p, h) -> {
                     try {
-                        Files.delete(Paths.get(h.get(MESSAGE_HEADER_FILE_ORIGINALFILE).toString()));
+                        Files.delete(Paths.get(h.get(FileHeaders.ORIGINAL_FILE).toString()));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
