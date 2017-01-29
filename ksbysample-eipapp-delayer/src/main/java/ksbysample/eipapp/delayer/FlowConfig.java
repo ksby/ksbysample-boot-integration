@@ -97,8 +97,9 @@ public class FlowConfig {
                 .from(s -> s.file(new File("C:/eipapp/ksbysample-eipapp-delayer/in03"))
                         , e -> e.poller(Pollers.fixedDelay(1000)))
                 // 待機秒数を計算するための delayInit, delayCount の初期値を header にセットする
-                .enrichHeaders(h -> h.header("delayInit", 3000))
-                .enrichHeaders(h -> h.header("delayCount", 0))
+                .enrichHeaders(h -> h
+                        .header("delayInit", 3000)
+                        .header("delayCount", 0))
                 .log()
                 // delayCount が 3 になるまで処理をループさせたいので、別の Flow にする
                 // return f -> f.～ で書いた場合、Bean名 + ".input" という MessageChannel
