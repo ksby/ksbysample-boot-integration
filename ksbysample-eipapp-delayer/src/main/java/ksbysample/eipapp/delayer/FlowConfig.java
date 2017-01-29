@@ -157,7 +157,7 @@ public class FlowConfig {
                 .from(stringMessageSource()
                         , e -> e.poller(Pollers.fixedDelay(1000)))
                 // MessageStore に格納された Message の headers, payload を出力する
-                .handle((Object p, Map<String, Object> h) -> {
+                .handle((p, h) -> {
                     Collection<Message<?>> delayMessagesList
                             = simpleMessageStore().getMessagesForGroup(GROUP_ID_DELAY);
                     delayMessagesList.forEach(m -> {
