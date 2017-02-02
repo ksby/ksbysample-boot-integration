@@ -14,8 +14,6 @@ import org.springframework.integration.dsl.support.GenericHandler;
 import org.springframework.integration.handler.advice.RequestHandlerRetryAdvice;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandlingException;
-import org.springframework.retry.RecoveryCallback;
-import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
@@ -278,25 +276,19 @@ public class FlowConfig {
         @Override
         public Object handle(File payload, Map<String, Object> headers) {
             Object result = this.exceptionClassifierRetryTemplate.execute(
-                    new RetryCallback<File, RuntimeException>() {
-                        @Override
-                        public File doWithRetry(RetryContext context) {
-                            log.info("★★★ リトライ回数 = " + context.getRetryCount());
+                    context -> {
+                        log.info("★★★ リトライ回数 = " + context.getRetryCount());
 
-                            if (true) {
-//                                throw new FileSystemAlreadyExistsException();
-                                throw new FileSystemNotFoundException();
-                            }
-                            return payload;
+                        if (true) {
+//                            throw new FileSystemAlreadyExistsException();
+                            throw new FileSystemNotFoundException();
                         }
-                    }, new RecoveryCallback<File>() {
-                        @Override
-                        public File recover(RetryContext context) throws Exception {
-                            Exception e = (Exception) context.getLastThrowable();
-                            log.error("●●● " + e.getClass().getName());
-                            log.error("●●● " + payload.getName());
-                            return payload;
-                        }
+                        return payload;
+                    }, context -> {
+                        Exception e = (Exception) context.getLastThrowable();
+                        log.error("●●● " + e.getClass().getName());
+                        log.error("●●● " + payload.getName());
+                        return payload;
                     });
 
             return result;
