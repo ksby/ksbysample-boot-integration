@@ -1,0 +1,76 @@
+group 'ksbysample'
+version '1.0.0-RELEASE'
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spring.io/repo/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+[compileJava, compileTestGroovy, compileTestJava]*.options*.compilerArgs = ['-Xlint:all,-options,-processing']
+
+eclipse {
+    classpath {
+        containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+        containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/repo/" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'io.spring.platform:platform-bom:Athens-SR2'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.RELEASE'
+    }
+}
+
+dependencies {
+    // dependency-management-plugin によりバージョン番号が自動で設定されるもの
+    // Appendix A. Dependency versions ( http://docs.spring.io/platform/docs/current/reference/htmlsingle/#appendix-dependency-versions ) 参照
+    compile("org.springframework.boot:spring-boot-starter-integration")
+    compile("org.springframework.integration:spring-integration-file")
+    compile("org.codehaus.janino:janino")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.spockframework:spock-core")
+    testCompile("org.spockframework:spock-spring")
+
+    // org.springframework.cloud:spring-cloud-dependencies によりバージョン番号が自動で設定されるもの
+    // http://projects.spring.io/spring-cloud/ の「Release Trains」参照
+    compile("org.springframework.cloud:spring-cloud-starter-zipkin") {
+        exclude module: 'spring-boot-starter-web'
+    }
+
+    // dependency-management-plugin によりバージョン番号が自動で設定されないもの、あるいは最新バージョンを指定したいもの
+    compile("org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE")
+    compile("org.projectlombok:lombok:1.16.12")
+    testCompile("org.assertj:assertj-core:3.6.2")
+}
