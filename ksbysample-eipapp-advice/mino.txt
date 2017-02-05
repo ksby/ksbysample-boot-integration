@@ -1,0 +1,952 @@
+:dependencies
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+archives - Configuration for archive artifacts.
+No dependencies
+
+compile - Dependencies for source set 'main'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
+\--- org.projectlombok:lombok:1.16.12
+
+compileClasspath - Compile classpath for source set 'main'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
+\--- org.projectlombok:lombok:1.16.12
+
+compileOnly - Compile dependencies for source set 'main'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
+\--- org.projectlombok:lombok:1.16.12
+
+default - Configuration for default artifacts.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
+\--- org.projectlombok:lombok:1.16.12
+
+runtime - Runtime dependencies for source set 'main'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
+\--- org.projectlombok:lombok:1.16.12
+
+testCompile - Dependencies for source set 'test'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
++--- org.projectlombok:lombok:1.16.12
++--- org.springframework.boot:spring-boot-starter-test: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE
+|    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    +--- org.springframework.boot:spring-boot-test-autoconfigure:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE (*)
+|    |    \--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    +--- com.jayway.jsonpath:json-path:2.2.0
+|    |    +--- net.minidev:json-smart:2.2.1
+|    |    |    \--- net.minidev:accessors-smart:1.1
+|    |    |         \--- org.ow2.asm:asm:5.0.3
+|    |    \--- org.slf4j:slf4j-api:1.7.16 -> 1.7.22
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.assertj:assertj-core:2.5.0 -> 3.6.2
+|    +--- org.mockito:mockito-core:1.10.19
+|    |    +--- org.hamcrest:hamcrest-core:1.1 -> 1.3
+|    |    \--- org.objenesis:objenesis:2.1 -> 2.4
+|    +--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.skyscreamer:jsonassert:1.3.0 -> 1.2.3
+|    |    \--- org.json:json:20090211 -> 20140107
+|    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    \--- org.springframework:spring-test:4.3.5.RELEASE
+|         \--- org.springframework:spring-core:4.3.5.RELEASE
++--- org.spockframework:spock-core: -> 1.0-groovy-2.4
+|    +--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+|    \--- junit:junit:4.12 (*)
++--- org.spockframework:spock-spring: -> 1.0-groovy-2.4
+|    +--- org.spockframework:spock-core:1.0-groovy-2.4 (*)
+|    \--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+\--- org.assertj:assertj-core:3.6.2
+
+testCompileClasspath - Compile classpath for source set 'test'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
++--- org.projectlombok:lombok:1.16.12
++--- org.springframework.boot:spring-boot-starter-test: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE
+|    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    +--- org.springframework.boot:spring-boot-test-autoconfigure:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE (*)
+|    |    \--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    +--- com.jayway.jsonpath:json-path:2.2.0
+|    |    +--- net.minidev:json-smart:2.2.1
+|    |    |    \--- net.minidev:accessors-smart:1.1
+|    |    |         \--- org.ow2.asm:asm:5.0.3
+|    |    \--- org.slf4j:slf4j-api:1.7.16 -> 1.7.22
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.assertj:assertj-core:2.5.0 -> 3.6.2
+|    +--- org.mockito:mockito-core:1.10.19
+|    |    +--- org.hamcrest:hamcrest-core:1.1 -> 1.3
+|    |    \--- org.objenesis:objenesis:2.1 -> 2.4
+|    +--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.skyscreamer:jsonassert:1.3.0 -> 1.2.3
+|    |    \--- org.json:json:20090211 -> 20140107
+|    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    \--- org.springframework:spring-test:4.3.5.RELEASE
+|         \--- org.springframework:spring-core:4.3.5.RELEASE
++--- org.spockframework:spock-core: -> 1.0-groovy-2.4
+|    +--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+|    \--- junit:junit:4.12 (*)
++--- org.spockframework:spock-spring: -> 1.0-groovy-2.4
+|    +--- org.spockframework:spock-core:1.0-groovy-2.4 (*)
+|    \--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+\--- org.assertj:assertj-core:3.6.2
+
+testCompileOnly - Compile dependencies for source set 'test'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
++--- org.projectlombok:lombok:1.16.12
++--- org.springframework.boot:spring-boot-starter-test: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE
+|    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    +--- org.springframework.boot:spring-boot-test-autoconfigure:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE (*)
+|    |    \--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    +--- com.jayway.jsonpath:json-path:2.2.0
+|    |    +--- net.minidev:json-smart:2.2.1
+|    |    |    \--- net.minidev:accessors-smart:1.1
+|    |    |         \--- org.ow2.asm:asm:5.0.3
+|    |    \--- org.slf4j:slf4j-api:1.7.16 -> 1.7.22
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.assertj:assertj-core:2.5.0 -> 3.6.2
+|    +--- org.mockito:mockito-core:1.10.19
+|    |    +--- org.hamcrest:hamcrest-core:1.1 -> 1.3
+|    |    \--- org.objenesis:objenesis:2.1 -> 2.4
+|    +--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.skyscreamer:jsonassert:1.3.0 -> 1.2.3
+|    |    \--- org.json:json:20090211 -> 20140107
+|    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    \--- org.springframework:spring-test:4.3.5.RELEASE
+|         \--- org.springframework:spring-core:4.3.5.RELEASE
++--- org.spockframework:spock-core: -> 1.0-groovy-2.4
+|    +--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+|    \--- junit:junit:4.12 (*)
++--- org.spockframework:spock-spring: -> 1.0-groovy-2.4
+|    +--- org.spockframework:spock-core:1.0-groovy-2.4 (*)
+|    \--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+\--- org.assertj:assertj-core:3.6.2
+
+testRuntime - Runtime dependencies for source set 'test'.
++--- org.springframework.boot:spring-boot-starter-integration: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:1.4.3.RELEASE
+|    |    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |    \--- org.springframework:spring-context:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-aop:4.3.5.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:4.3.5.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-expression:4.3.5.RELEASE
+|    |    |              \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:1.4.3.RELEASE
+|    |    |    +--- ch.qos.logback:logback-classic:1.1.8
+|    |    |    |    +--- ch.qos.logback:logback-core:1.1.8
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.21 -> 1.7.22
+|    |    |    +--- org.slf4j:jcl-over-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    +--- org.slf4j:jul-to-slf4j:1.7.22
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22
+|    |    |    \--- org.slf4j:log4j-over-slf4j:1.7.22
+|    |    |         \--- org.slf4j:slf4j-api:1.7.22
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.yaml:snakeyaml:1.17
+|    +--- org.springframework.boot:spring-boot-starter-aop:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.8.9
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE
+|    |    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-aop:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework:spring-messaging:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    +--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    +--- org.springframework:spring-tx:4.3.5.RELEASE
+|    |    |    +--- org.springframework:spring-beans:4.3.5.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    \--- org.springframework.retry:spring-retry:1.1.3.RELEASE -> 1.1.5.RELEASE
+|    +--- org.springframework.integration:spring-integration-java-dsl:1.1.4.RELEASE -> 1.2.1.RELEASE
+|    |    +--- org.springframework.integration:spring-integration-core:4.3.5.RELEASE -> 4.3.6.RELEASE (*)
+|    |    \--- org.reactivestreams:reactive-streams:1.0.0
+|    \--- org.springframework.integration:spring-integration-jmx:4.3.6.RELEASE
+|         \--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
++--- org.springframework.integration:spring-integration-file: -> 4.3.6.RELEASE
+|    +--- org.springframework.integration:spring-integration-core:4.3.6.RELEASE (*)
+|    \--- commons-io:commons-io:2.4
++--- org.codehaus.janino:janino: -> 2.7.8
+|    \--- org.codehaus.janino:commons-compiler:2.7.8
++--- org.springframework.cloud:spring-cloud-starter-zipkin: -> 1.0.9.RELEASE
+|    +--- org.springframework.cloud:spring-cloud-starter-sleuth:1.0.9.RELEASE
+|    |    +--- org.springframework.cloud:spring-cloud-starter:1.1.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    |    +--- org.springframework.cloud:spring-cloud-context:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    +--- org.springframework.cloud:spring-cloud-commons:1.1.3.RELEASE
+|    |    |    |    \--- org.springframework.security:spring-security-crypto:4.0.4.RELEASE -> 4.1.4.RELEASE
+|    |    |    \--- org.springframework.security:spring-security-rsa:1.0.3.RELEASE
+|    |    |         \--- org.bouncycastle:bcpkix-jdk15on:1.55 -> 1.54
+|    |    |              \--- org.bouncycastle:bcprov-jdk15on:1.54
+|    |    +--- org.springframework.boot:spring-boot-starter-actuator:1.3.7.RELEASE -> 1.4.3.RELEASE
+|    |    |    +--- org.springframework.boot:spring-boot-starter:1.4.3.RELEASE (*)
+|    |    |    \--- org.springframework.boot:spring-boot-actuator:1.4.3.RELEASE
+|    |    |         +--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    |    |         +--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.8.5
+|    |    |         |    +--- com.fasterxml.jackson.core:jackson-annotations:2.8.0 -> 2.8.5
+|    |    |         |    \--- com.fasterxml.jackson.core:jackson-core:2.8.5
+|    |    |         +--- org.springframework:spring-core:4.3.5.RELEASE
+|    |    |         \--- org.springframework:spring-context:4.3.5.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:1.3.7.RELEASE -> 1.4.3.RELEASE (*)
+|    |    \--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE
+|    |         +--- org.springframework:spring-context:4.2.7.RELEASE -> 4.3.5.RELEASE (*)
+|    |         \--- org.aspectj:aspectjrt:1.8.9
+|    \--- org.springframework.cloud:spring-cloud-sleuth-zipkin:1.0.9.RELEASE
+|         +--- org.springframework.cloud:spring-cloud-sleuth-core:1.0.9.RELEASE (*)
+|         +--- io.zipkin.java:zipkin:1.11.1
+|         +--- io.zipkin.reporter:zipkin-reporter:0.5.0
+|         |    \--- io.zipkin.java:zipkin:1.11.1
+|         \--- io.zipkin.reporter:zipkin-sender-urlconnection:0.5.0
+|              +--- io.zipkin.reporter:zipkin-reporter:0.5.0 (*)
+|              \--- io.zipkin.java:zipkin:1.11.1
++--- org.springframework.integration:spring-integration-java-dsl:1.2.1.RELEASE (*)
++--- org.projectlombok:lombok:1.16.12
++--- org.springframework.boot:spring-boot-starter-test: -> 1.4.3.RELEASE
+|    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE
+|    |    \--- org.springframework.boot:spring-boot:1.4.3.RELEASE (*)
+|    +--- org.springframework.boot:spring-boot-test-autoconfigure:1.4.3.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-test:1.4.3.RELEASE (*)
+|    |    \--- org.springframework.boot:spring-boot-autoconfigure:1.4.3.RELEASE (*)
+|    +--- com.jayway.jsonpath:json-path:2.2.0
+|    |    +--- net.minidev:json-smart:2.2.1
+|    |    |    \--- net.minidev:accessors-smart:1.1
+|    |    |         \--- org.ow2.asm:asm:5.0.3
+|    |    \--- org.slf4j:slf4j-api:1.7.16 -> 1.7.22
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.assertj:assertj-core:2.5.0 -> 3.6.2
+|    +--- org.mockito:mockito-core:1.10.19
+|    |    +--- org.hamcrest:hamcrest-core:1.1 -> 1.3
+|    |    \--- org.objenesis:objenesis:2.1 -> 2.4
+|    +--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.skyscreamer:jsonassert:1.3.0 -> 1.2.3
+|    |    \--- org.json:json:20090211 -> 20140107
+|    +--- org.springframework:spring-core:4.3.5.RELEASE
+|    \--- org.springframework:spring-test:4.3.5.RELEASE
+|         \--- org.springframework:spring-core:4.3.5.RELEASE
++--- org.spockframework:spock-core: -> 1.0-groovy-2.4
+|    +--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+|    \--- junit:junit:4.12 (*)
++--- org.spockframework:spock-spring: -> 1.0-groovy-2.4
+|    +--- org.spockframework:spock-core:1.0-groovy-2.4 (*)
+|    \--- org.codehaus.groovy:groovy-all:2.4.1 -> 2.4.7
+\--- org.assertj:assertj-core:3.6.2
+
+(*) - dependencies omitted (listed previously)
+
+BUILD SUCCESSFUL
+
+Total time: 9.567 secs
