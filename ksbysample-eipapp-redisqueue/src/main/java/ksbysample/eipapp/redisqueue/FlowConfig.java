@@ -2,6 +2,7 @@ package ksbysample.eipapp.redisqueue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -11,6 +12,8 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.core.Pollers;
+import org.springframework.integration.endpoint.MessageProducerSupport;
+import org.springframework.integration.redis.inbound.RedisQueueMessageDrivenEndpoint;
 import org.springframework.integration.redis.store.RedisChannelMessageStore;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -18,10 +21,14 @@ import org.springframework.messaging.Message;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 @Configuration
 public class FlowConfig {
+
+    private static final String REDIS_LISTS_NAME = "REDIS_QUEUE";
 
     private final RedisConnectionFactory redisConnectionFactory;
 
@@ -78,7 +85,25 @@ public class FlowConfig {
 
     @Bean
     public QueueChannel redisQueue() {
-        return MessageChannels.queue("redisQueue", redisMessageStore(), "REDIS_QUEUE").get();
+        return MessageChannels.queue("redisQueue", redisMessageStore(), REDIS_LISTS_NAME).get();
+    }
+
+    /**
+     * {@link FlowConfig#REDIS_LISTS_NAME} の Redis Lists を 1秒毎にチェックして、データがあれば Message を送信する
+     * {@link org.springframework.integration.core.MessageProducer}
+     * データチェックは 5スレッドで行う
+     *
+     * @return new {@link MessageProducerSupport}
+     */
+    @Bean
+    public MessageProducerSupport redisMessageProducer() {
+        RedisQueueMessageDrivenEndpoint messageProducer
+                = new RedisQueueMessageDrivenEndpoint(REDIS_LISTS_NAME, this.redisConnectionFactory);
+        messageProducer.setRecoveryInterval(1000);
+        // setExpectMessage(true) を入れないと Redis Lists から取得したデータ ( headers + SampleData オブジェクトの payload )
+        // が全て payload にセットされる
+        messageProducer.setExpectMessage(true);
+        return messageProducer;
     }
 
     /**
@@ -107,10 +132,11 @@ public class FlowConfig {
     @Bean
     public IntegrationFlow printFlow() {
         return IntegrationFlows
-                .from(redisQueue())
-                .bridge(e -> e.poller(Pollers.fixedDelay(1000)))
+                .from(redisMessageProducer())
+                .log()
+                .channel(c -> c.executor(Executors.newFixedThreadPool(5)))
                 .<SampleData>handle((p, h) -> {
-                    System.out.println("★★★ " + p.getMessage());
+                    log.info("★★★ " + p.getMessage());
                     return null;
                 })
                 .get();
