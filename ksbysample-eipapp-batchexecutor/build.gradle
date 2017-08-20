@@ -1,0 +1,132 @@
+group 'ksbysample'
+version '1.0.0-RELEASE'
+
+buildscript {
+    ext {
+        springBootVersion = '1.5.6.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        // for Error Prone ( http://errorprone.info/ )
+        classpath("net.ltgt.gradle:gradle-errorprone-plugin:0.0.11")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'groovy'
+apply plugin: 'net.ltgt.errorprone'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
+[compileJava, compileTestGroovy, compileTestJava]*.options*.compilerArgs = ['-Xlint:all,-options,-processing,-path']
+compileJava.options.compilerArgs += ['-Xep:RemoveUnusedImports:WARN']
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+checkstyle {
+    configFile = file("${rootProject.projectDir}/config/checkstyle/google_checks.xml")
+    toolVersion = '8.1'
+    sourceSets = [project.sourceSets.main]
+}
+
+findbugs {
+    toolVersion = '3.0.1'
+    sourceSets = [project.sourceSets.main]
+    ignoreFailures = true
+    effort = "max"
+    excludeFilter = file("${rootProject.projectDir}/config/findbugs/findbugs-exclude.xml")
+}
+
+tasks.withType(FindBugs) {
+    // Gradle 3.3以降 + FindBugs Gradle Plugin を組み合わせると、"The following errors occurred during analysis:"
+    // の後に "Cannot open codebase filesystem:..." というメッセージが大量に出力されるので、以下の doFirst { ... }
+    // のコードを入れることで出力されないようにする
+    doFirst {
+        def fc = classes
+        if (fc == null) {
+            return
+        }
+        fc.exclude '**/*.properties'
+        fc.exclude '**/*.xml'
+        fc.exclude '**/META-INF/**'
+        fc.exclude '**/static/**'
+        fc.exclude '**/templates/**'
+        classes = files(fc.files)
+    }
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+pmd {
+    toolVersion = "5.8.1"
+    sourceSets = [project.sourceSets.main]
+    ignoreFailures = true
+    consoleOutput = true
+    ruleSetFiles = rootProject.files("/config/pmd/pmd-project-rulesets.xml")
+    ruleSets = []
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        // BOM は https://repo.spring.io/release/io/spring/platform/platform-bom/Brussels-SR4/
+        // の下を見ること
+        mavenBom("io.spring.platform:platform-bom:Brussels-SR4")
+    }
+}
+
+bootRepackage {
+    mainClass = 'ksbysample.eipapp.batchexecutor.Application'
+}
+
+dependencies {
+    def lombokVersion = "1.16.18"
+    def errorproneVersion = "2.0.15"
+
+    // dependency-management-plugin によりバージョン番号が自動で設定されるもの
+    // Appendix A. Dependency versions ( http://docs.spring.io/platform/docs/current/reference/htmlsingle/#appendix-dependency-versions ) 参照
+    compile("org.springframework.boot:spring-boot-starter-integration")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.integration:spring-integration-http")
+    compile("org.springframework.integration:spring-integration-jdbc")
+    compile("commons-io:commons-io")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+    // dependency-management-plugin によりバージョン番号が自動で設定されないもの、あるいは最新バージョンを指定したいもの
+    compile("org.springframework.integration:spring-integration-java-dsl:1.2.2.RELEASE")
+    compile("com.h2database:h2:1.4.192")
+
+    // for lombok
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+
+    // for Error Prone ( http://errorprone.info/ )
+    errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
+    compileOnly("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
+}
