@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans.xsd
+                                 http://www.springframework.org/schema/integration
+                                 http://www.springframework.org/schema/integration/spring-integration.xsd
+                                 http://www.springframework.org/schema/jdbc
+                                 http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <!--
+        アプリケーション起動時に schema-h2.sql を実行して JdbcChannelMessageStore で使用する
+        INT_CHANNEL_MESSAGE テーブルを新規作成する
+        また、既に INT_CHANNEL_MESSAGE テーブルがあると schema-h2.sql 実行時にエラーが出るが、
+        ignore-failures="ALL" を付与して無視するようにする
+    -->
+    <jdbc:initialize-database ignore-failures="ALL">
+        <jdbc:script location="classpath:org/springframework/integration/jdbc/store/channel/schema-h2.sql"/>
+    </jdbc:initialize-database>
+
+</beans:beans>
