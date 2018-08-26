@@ -1,0 +1,38 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'ksbysample'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    def lombokVersion = "1.18.2"
+
+    implementation('org.springframework.boot:spring-boot-starter-integration')
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation('org.springframework.integration:spring-integration-mail')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    // for lombok
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+}
