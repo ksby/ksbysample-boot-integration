@@ -25,15 +25,9 @@ repositories {
 
 
 dependencies {
-    def lombokVersion = "1.18.2"
-
     implementation('org.springframework.boot:spring-boot-starter-integration')
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation('org.springframework.integration:spring-integration-mail')
     implementation("org.apache.commons:commons-lang3")
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-
-    // for lombok
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 }
