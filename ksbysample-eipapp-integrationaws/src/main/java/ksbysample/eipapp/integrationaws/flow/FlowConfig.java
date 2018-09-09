@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.aws.inbound.S3InboundFileSynchronizer;
+import org.springframework.integration.aws.inbound.S3InboundFileSynchronizingMessageSource;
 import org.springframework.integration.aws.outbound.S3MessageHandler;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
@@ -29,6 +31,7 @@ public class FlowConfig {
     private static final String EIPAPP_ROOT_DIR_PATH = "D:/eipapp/ksbysample-eipapp-integrationaws";
     private static final String UPLOAD_DIR_PATH = EIPAPP_ROOT_DIR_PATH + "/upload";
     private static final String UPLOADING_DIR_PATH = EIPAPP_ROOT_DIR_PATH + "/uploading";
+    private static final String DOWNLOAD_DIR_PATH = EIPAPP_ROOT_DIR_PATH + "/download";
     private static final String S3_BUCKET = "s3bucket-integration-test-ksby";
 
     // リージョンは環境変数 AWS_REGION に（東京リージョンなら ap-northeast-1）、
@@ -88,6 +91,53 @@ public class FlowConfig {
                     p.delete();
                     log.warn(String.format("★★★ %s を S3 にアップロードしました", p.getName()));
                     return null;
+                })
+                .get();
+    }
+
+    /********************************************************
+     * S3 --> download ディレクトリ ファイルダウンロード処理      *
+     ********************************************************/
+
+    @Bean
+    public S3InboundFileSynchronizer s3InboundFileSynchronizer() {
+        S3InboundFileSynchronizer synchronizer = new S3InboundFileSynchronizer(amazonS3());
+        synchronizer.setDeleteRemoteFiles(true);
+        synchronizer.setPreserveTimestamp(true);
+        synchronizer.setRemoteDirectory(S3_BUCKET);
+        return synchronizer;
+    }
+
+    @Bean
+    public S3InboundFileSynchronizingMessageSource s3InboundFileSynchronizingMessageSource() {
+        S3InboundFileSynchronizingMessageSource messageSource =
+                new S3InboundFileSynchronizingMessageSource(s3InboundFileSynchronizer());
+        messageSource.setLocalDirectory(new File(DOWNLOAD_DIR_PATH));
+        messageSource.setLocalFilter(new AcceptAllFileListFilter<>());
+        return messageSource;
+    }
+
+    @Bean
+    public IntegrationFlow downloadFromS3Flow() {
+        return IntegrationFlows.from(
+                // 1秒毎に S3 Bucket を監視し、ファイルがあれば処理を進める
+                s3InboundFileSynchronizingMessageSource(), c -> c.poller(Pollers
+                        .fixedDelay(1000)
+                        // 1度に最大100ファイルダウンロードする
+                        // .maxMessagesPerPoll(...) を書かないと 1ファイルずつダウンロードされる
+                        .maxMessagesPerPoll(100)))
+                // download ディレクトリに保存されたファイルを upload ディレクトリに移動する
+                // ちなみに download ディレクトリからファイルを移動か削除しないと s3InboundFileSynchronizingMessageSource()
+                // から Message が延々と送信され続けるので、必ず移動か削除する必要がある
+                .<File>handle((p, h) -> {
+                    try {
+                        Files.move(p.toPath(), Paths.get(UPLOAD_DIR_PATH, p.getName())
+                                , StandardCopyOption.REPLACE_EXISTING);
+                        log.error(String.format("◎◎◎ %s をダウンロードしました", p.getName()));
+                        return null;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .get();
     }
