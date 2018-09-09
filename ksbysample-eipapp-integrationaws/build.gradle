@@ -30,7 +30,14 @@ dependencyManagement {
 }
 
 dependencies {
+    def lombokVersion = "1.18.2"
+
     implementation('org.springframework.boot:spring-boot-starter-integration')
     implementation('org.springframework.integration:spring-integration-aws:2.0.0.RELEASE')
+    implementation('org.springframework.integration:spring-integration-file')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    // for lombok
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 }
