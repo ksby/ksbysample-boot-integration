@@ -30,9 +30,16 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
+              - s3:ListBucket
+              - s3:GetBucketLocation
+            Resource: !Join [ "", [ "arn:aws:s3:::", !Ref IntegrationTestS3Bucket ] ]
+          - Effect: Allow
+            Action:
               - s3:PutObject
+              - s3:PutObjectAcl
               - s3:GetObject
-              - s3:ListObject
+              - s3:GetObjectAcl
+              - s3:DeleteObject
             Resource: !Join [ "", [ "arn:aws:s3:::", !Ref IntegrationTestS3Bucket, "/*" ] ]
       Users:
         - !Ref IntegrationTestUser
