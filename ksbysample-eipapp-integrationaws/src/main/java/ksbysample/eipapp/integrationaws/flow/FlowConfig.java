@@ -74,7 +74,7 @@ public class FlowConfig {
                     }
                 })
                 // ここから下はマルチスレッドで並列処理する
-                .channel(c -> c.executor(Executors.newFixedThreadPool(5)))
+                .channel(c -> c.executor(Executors.newFixedThreadPool(2)))
                 // 処理開始のログを出力する
                 // 上の .channel(...) の直後に .log(...) を書くと並列処理されないため、.handle(...) を書いてその中でログに出力する
                 .<File>handle((p, h) -> {
@@ -114,6 +114,7 @@ public class FlowConfig {
                 new S3InboundFileSynchronizingMessageSource(s3InboundFileSynchronizer());
         messageSource.setLocalDirectory(new File(DOWNLOAD_DIR_PATH));
         messageSource.setLocalFilter(new AcceptAllFileListFilter<>());
+        messageSource.setMaxFetchSize(1);
         return messageSource;
     }
 
@@ -122,10 +123,7 @@ public class FlowConfig {
         return IntegrationFlows.from(
                 // 1秒毎に S3 Bucket を監視し、ファイルがあれば処理を進める
                 s3InboundFileSynchronizingMessageSource(), c -> c.poller(Pollers
-                        .fixedDelay(1000)
-                        // 1度に最大100ファイルダウンロードする
-                        // .maxMessagesPerPoll(...) を書かないと 1ファイルずつダウンロードされる
-                        .maxMessagesPerPoll(100)))
+                        .fixedDelay(200)))
                 // download ディレクトリに保存されたファイルを upload ディレクトリに移動する
                 // ちなみに download ディレクトリからファイルを移動か削除しないと s3InboundFileSynchronizingMessageSource()
                 // から Message が延々と送信され続けるので、必ず移動か削除する必要がある
