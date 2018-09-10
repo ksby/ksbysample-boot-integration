@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Spring Integration Test Stack
+
+Resources:
+  #########################
+  # S3 Bucket
+  #########################
+  IntegrationTestS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "s3bucket-integration-test-ksby"
+
+  #########################
+  # IAM User & IAM Policy
+  #########################
+  IntegrationTestUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: "iam-user-integration-test"
+  IntegrationTestUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref IntegrationTestUser
+  IntegrationTestPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: "iam-policy-integration-test"
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:ListBucket
+              - s3:GetBucketLocation
+            Resource: !Join [ "", [ "arn:aws:s3:::", !Ref IntegrationTestS3Bucket ] ]
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:PutObjectAcl
+              - s3:GetObject
+              - s3:GetObjectAcl
+              - s3:DeleteObject
+            Resource: !Join [ "", [ "arn:aws:s3:::", !Ref IntegrationTestS3Bucket, "/*" ] ]
+      Users:
+        - !Ref IntegrationTestUser
+
+Outputs:
+  AccessKeyId:
+    Value: !Ref IntegrationTestUserAccessKey
+  SecretAccessKey:
+    Value: !GetAtt IntegrationTestUserAccessKey.SecretAccessKey
