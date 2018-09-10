@@ -121,7 +121,7 @@ public class FlowConfig {
     @Bean
     public IntegrationFlow downloadFromS3Flow() {
         return IntegrationFlows.from(
-                // 1秒毎に S3 Bucket を監視し、ファイルがあれば処理を進める
+                // 200ミリ秒毎に S3 Bucket を監視し、ファイルがあれば処理を進める
                 s3InboundFileSynchronizingMessageSource(), c -> c.poller(Pollers
                         .fixedDelay(200)))
                 // download ディレクトリに保存されたファイルを upload ディレクトリに移動する
