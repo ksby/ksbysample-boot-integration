@@ -34,3 +34,22 @@ services:
       - NET_ADMIN
       - SYS_PTRACE
     restart: always
+
+  # stilliard/pure-ftpd
+  # https://hub.docker.com/r/stilliard/pure-ftpd/
+  #
+  # 起動した pure-ftpd のコンテナ(ftp-server) にアクセスする場合には以下のコマンドを実行する
+  # docker exec -it ftp-server /bin/bash
+  #
+  ftp-server:
+    image: stilliard/pure-ftpd:hardened
+    container_name: ftp-server
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009"
+    environment:
+      - PUBLICHOST=localhost
+      - FTP_USER_NAME=test
+      - FTP_USER_PASS=12345678
+      - FTP_USER_HOME=/home/ftpusers/test
+    restart: always
