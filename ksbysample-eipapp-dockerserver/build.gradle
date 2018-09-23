@@ -28,6 +28,8 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-integration')
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation('org.springframework.integration:spring-integration-mail')
+    implementation('org.springframework.integration:spring-integration-file')
+    implementation('org.springframework.integration:spring-integration-ftp')
     implementation("org.apache.commons:commons-lang3")
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
