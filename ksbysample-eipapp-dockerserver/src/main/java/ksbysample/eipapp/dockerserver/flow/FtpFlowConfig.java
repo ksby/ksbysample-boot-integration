@@ -13,6 +13,8 @@ import org.springframework.integration.file.filters.AcceptAllFileListFilter;
 import org.springframework.integration.file.remote.handler.FileTransferringMessageHandler;
 import org.springframework.integration.file.remote.session.CachingSessionFactory;
 import org.springframework.integration.file.remote.session.SessionFactory;
+import org.springframework.integration.ftp.inbound.FtpInboundFileSynchronizer;
+import org.springframework.integration.ftp.inbound.FtpInboundFileSynchronizingMessageSource;
 import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.messaging.support.GenericMessage;
@@ -36,6 +38,7 @@ public class FtpFlowConfig {
     private static final String FTP_LOCAL_ROOT_DIR = "D:/eipapp/ksbysample-eipapp-dockerserver/ftp";
     private static final String FTP_LOCAL_UPLOAD_DIR = FTP_LOCAL_ROOT_DIR + "/upload";
     private static final String FTP_LOCAL_UPLOADING_DIR = FTP_LOCAL_ROOT_DIR + "/uploading";
+    private static final String FTP_LOCAL_DOWNLOAD_DIR = FTP_LOCAL_ROOT_DIR + "/download";
 
     @Bean
     public SessionFactory<FTPFile> ftpSessionFactory() {
@@ -90,6 +93,49 @@ public class FtpFlowConfig {
                 .<File>handle((p, h) -> {
                     p.delete();
                     return null;
+                })
+                .get();
+    }
+
+    /****************************************
+     * FTPダウンロード処理のサンプル             *
+     ****************************************/
+
+    @Bean
+    public FtpInboundFileSynchronizer ftpInboundFileSynchronizer() {
+        FtpInboundFileSynchronizer synchronizer = new FtpInboundFileSynchronizer(ftpSessionFactory());
+        synchronizer.setRemoteDirectory(FTP_REMOTE_DIR);
+        synchronizer.setFilter(new AcceptAllFileListFilter<>());
+        synchronizer.setPreserveTimestamp(true);
+        synchronizer.setDeleteRemoteFiles(true);
+        return synchronizer;
+    }
+
+    @Bean
+    public FtpInboundFileSynchronizingMessageSource ftpDownloadFileMessageSource() {
+        FtpInboundFileSynchronizingMessageSource messageSource
+                = new FtpInboundFileSynchronizingMessageSource(ftpInboundFileSynchronizer());
+        messageSource.setLocalDirectory(new File(FTP_LOCAL_DOWNLOAD_DIR));
+        messageSource.setLocalFilter(new AcceptAllFileListFilter<>());
+        messageSource.setMaxFetchSize(1);
+        return messageSource;
+    }
+
+    @Bean
+    public IntegrationFlow ftpDownloadFlow() {
+        return IntegrationFlows.from(
+                // 1秒毎に FTPサーバを監視し、ファイルがあれば download ディレクトリにダウンロードする
+                ftpDownloadFileMessageSource(), c -> c.poller(Pollers.fixedDelay(1000)))
+                .log(LoggingHandler.Level.ERROR)
+                // ファイルを upload ディレクトリへ移動する
+                .<File>handle((p, h) -> {
+                    try {
+                        Files.move(p.toPath(), Paths.get(FTP_LOCAL_UPLOAD_DIR, p.getName())
+                                , StandardCopyOption.REPLACE_EXISTING);
+                        return null;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .get();
     }
