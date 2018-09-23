@@ -42,7 +42,7 @@ services:
   # docker exec -it ftp-server /bin/bash
   #
   ftp-server:
-    image: stilliard/pure-ftpd:hardened
+    image: stilliard/pure-ftpd:latest
     container_name: ftp-server
     ports:
       - "21:21"
