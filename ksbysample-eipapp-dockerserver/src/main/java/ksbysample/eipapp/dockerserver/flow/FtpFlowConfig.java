@@ -26,7 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-@Configuration
+// このサンプルを実行したい場合には、@Configuration のコメントアウトを外すこと
+//@Configuration
 public class FtpFlowConfig {
 
     private static final String FTP_SERVER = "localhost";
