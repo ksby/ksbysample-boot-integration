@@ -53,3 +53,17 @@ services:
       - FTP_USER_PASS=12345678
       - FTP_USER_HOME=/home/ftpusers/test
     restart: always
+
+  # atmoz/sftp
+  # https://hub.docker.com/r/atmoz/sftp/
+  #
+  # 起動した sftp のコンテナ(sftp-server) にアクセスする場合には以下のコマンドを実行する
+  # docker exec -it sftp-server /bin/bash
+  #
+  sftp-server:
+    image: atmoz/sftp
+    container_name: sftp-server
+    ports:
+      - "22:22"
+    volumes:
+      - ./docker/sftp-server/config/users.conf:/etc/sftp/users.conf:ro
