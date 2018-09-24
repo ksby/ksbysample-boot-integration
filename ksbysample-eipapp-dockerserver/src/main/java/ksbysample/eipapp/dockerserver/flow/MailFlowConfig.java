@@ -27,7 +27,8 @@ import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Configuration
+// このサンプルを実行したい場合には、@Configuration のコメントアウトを外すこと
+//@Configuration
 public class MailFlowConfig {
 
     /****************************************
