@@ -25,7 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-@Configuration
+// このサンプルを実行したい場合には、@Configuration のコメントアウトを外すこと
+//@Configuration
 public class SftpFlowConfig {
 
     private static final String SFTP_SERVER = "localhost";
