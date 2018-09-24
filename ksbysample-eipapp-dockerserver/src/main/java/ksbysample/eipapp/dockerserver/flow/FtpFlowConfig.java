@@ -75,7 +75,7 @@ public class FtpFlowConfig {
     @Bean
     public IntegrationFlow ftpUploadFlow() {
         return IntegrationFlows.from(
-                // 200ミリ秒毎に ftp ディレクトリを監視し、ファイルがあれば処理を進める
+                // 200ミリ秒毎に upload ディレクトリを監視し、ファイルがあれば処理を進める
                 ftpUploadFileMessageSource(), c -> c.poller(Pollers.fixedDelay(200)))
                 // ファイルを uploading ディレクトリへ移動する
                 .<File>handle((p, h) -> {
