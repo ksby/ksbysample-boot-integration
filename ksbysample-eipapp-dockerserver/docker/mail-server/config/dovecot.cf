@@ -1,5 +1,8 @@
+# SSL を使用しない場合には以下のコメントアウトを解除し、ssl = yes をコメントアウトする
 disable_plaintext_auth = no
 ssl = no
+# ssl = yes
+
 # debug したい場合には以下の行のコメントアウトを解除する
 # auth_verbose = yes
 # auth_debug = yes

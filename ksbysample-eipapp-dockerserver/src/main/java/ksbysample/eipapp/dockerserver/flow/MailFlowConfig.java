@@ -102,12 +102,22 @@ public class MailFlowConfig {
     @Bean
     public Pop3MailReceiver pop3MailReceiver() {
         Pop3MailReceiver pop3MailReceiver
+                // テキストベースの POP3 を使用する場合には上の、POP over SSL を使用する場合には下の行のコメントアウトを解除する
                 = new Pop3MailReceiver("localhost", "tanaka@mail.example.com", "xxxxxxxx");
+                // = new Pop3MailReceiver("localhost", 995, "tanaka@mail.example.com", "xxxxxxxx");
         pop3MailReceiver.setShouldDeleteMessages(true);
         Properties javaMailProperties = new Properties();
+        javaMailProperties.put("mail.pop3.connectiontimeout", "5000");
+        javaMailProperties.put("mail.pop3.timeout", "5000");
+
+        // POP over SSL を使用する場合には下の２行のコメントアウトを解除する
+        // javaMailProperties.put("mail.pop3.ssl.enable", "true");
+        // javaMailProperties.put("mail.pop3.ssl.trust", "*");
+
         // debug したい場合には以下のコメントアウトを解除する
         // javaMailProperties.put("mail.debug", "true");
         pop3MailReceiver.setJavaMailProperties(javaMailProperties);
+
         return pop3MailReceiver;
     }
 

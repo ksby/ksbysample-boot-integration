@@ -19,6 +19,11 @@ services:
     ports:
       - "25:25"
       - "110:110"
+      - "143:143"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+      - "995:995"
     volumes:
       - ./docker/mail-server/config/:/tmp/docker-mailserver/
     environment:
@@ -34,6 +39,15 @@ services:
       - NET_ADMIN
       - SYS_PTRACE
     restart: always
+
+  # Webmail クライアント
+  rainloop:
+    image: hardware/rainloop
+    container_name: rainloop
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./docker/rainloop/data/:/rainloop/data
 
   # stilliard/pure-ftpd
   # https://hub.docker.com/r/stilliard/pure-ftpd/
