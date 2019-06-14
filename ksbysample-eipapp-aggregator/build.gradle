@@ -13,7 +13,25 @@ repositories {
 	mavenCentral()
 }
 
+configurations {
+	// annotationProcessor と testAnnotationProcessor、compileOnly と testCompileOnly を併記不要にする
+	testAnnotationProcessor.extendsFrom annotationProcessor
+	testImplementation.extendsFrom compileOnly
+}
+
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-integration'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	def lombokVersion = "1.18.6"
+
+	implementation("org.springframework.boot:spring-boot-starter-integration")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.springframework.integration:spring-integration-redis")
+	implementation("org.springframework.boot:spring-boot-starter-json") {
+		exclude group: "org.springframework", module: "spring-web"
+	}
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	// for lombok
+	// testAnnotationProcessor、testCompileOnly を併記しなくてよいよう configurations で設定している
+	annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+	compileOnly("org.projectlombok:lombok:${lombokVersion}")
 }
