@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class SplitZundokoFlowConfig {
 
     private static final String[] ZUNDOKO = new String[]{"ずん", "ずん", "ずん", "ずん", "どこ"};
