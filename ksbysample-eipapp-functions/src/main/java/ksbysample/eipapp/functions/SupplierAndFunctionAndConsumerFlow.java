@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class SupplierAndFunctionAndConsumerFlow {
 
     private AtomicInteger count = new AtomicInteger(0);
