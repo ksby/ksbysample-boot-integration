@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class MessageSourceAndLambdaFlow {
 
     private AtomicInteger count = new AtomicInteger(0);
