@@ -1,0 +1,42 @@
+plugins {
+    id "org.springframework.boot" version "2.1.6.RELEASE"
+    id "java"
+    id "idea"
+}
+
+apply plugin: "io.spring.dependency-management"
+
+group = "ksbysample.eipapp"
+version = "0.0.1-SNAPSHOT"
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+configurations {
+    // annotationProcessor と testAnnotationProcessor、compileOnly と testCompileOnly を併記不要にする
+    testAnnotationProcessor.extendsFrom annotationProcessor
+    testImplementation.extendsFrom compileOnly
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    def lombokVersion = "1.18.6"
+
+    implementation("org.springframework.boot:spring-boot-starter-integration")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // for lombok
+    // testAnnotationProcessor、testCompileOnly を併記しなくてよいよう configurations で設定している
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+}
