@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-@Configuration
+//@Configuration
 public class SupplierAndFunction2Flow {
 
     @Autowired
