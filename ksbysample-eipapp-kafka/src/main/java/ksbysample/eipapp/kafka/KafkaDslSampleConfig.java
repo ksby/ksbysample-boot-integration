@@ -9,6 +9,7 @@ import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.handler.advice.ErrorMessageSendingRecoverer;
 import org.springframework.integration.kafka.dsl.Kafka;
+import org.springframework.integration.kafka.dsl.KafkaMessageDrivenChannelAdapterSpec;
 import org.springframework.integration.kafka.dsl.KafkaProducerMessageHandlerSpec;
 import org.springframework.integration.kafka.inbound.KafkaMessageDrivenChannelAdapter;
 import org.springframework.integration.kafka.support.RawRecordHeaderErrorMessageStrategy;
@@ -18,9 +19,7 @@ import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -91,23 +90,49 @@ public class KafkaDslSampleConfig {
     }
 
     @Bean
-    public IntegrationFlow topic1ConsumerFlow() {
+    public IntegrationFlow topic1Consumer1Flow() {
         return IntegrationFlows
-                .from(Kafka.messageDrivenChannelAdapter(kafkaConsumerFactory
-                        , KafkaMessageDrivenChannelAdapter.ListenerMode.record, TOPIC_NAME)
-                        .configureListenerContainer(c ->
-                                c.ackMode(ContainerProperties.AckMode.RECORD)
-                                        .idleEventInterval(100L)
-                                        .id("topic1ConsumerContainer"))
-                        .recoveryCallback(new ErrorMessageSendingRecoverer(errorChannel
-                                , new RawRecordHeaderErrorMessageStrategy()))
-                        .retryTemplate(new RetryTemplate())
-                        .filterInRetry(true))
+                .from(createKafkaMessageDrivenChannelAdapter())
                 .handle((p, h) -> {
-                    log.error("★★★ " + p);
+                    log.error(String.format("★★★ partition = %s, value = %s", h.get("kafka_receivedPartitionId"), p));
                     return null;
                 })
                 .get();
+    }
+
+    @Bean
+    public IntegrationFlow topic1Consumer2Flow() {
+        return IntegrationFlows
+                .from(createKafkaMessageDrivenChannelAdapter())
+                .handle((p, h) -> {
+                    log.error(String.format("●●● partition = %s, value = %s", h.get("kafka_receivedPartitionId"), p));
+                    return null;
+                })
+                .get();
+    }
+
+    @Bean
+    public IntegrationFlow topic1Consumer3Flow() {
+        return IntegrationFlows
+                .from(createKafkaMessageDrivenChannelAdapter())
+                .handle((p, h) -> {
+                    log.error(String.format("▲▲▲ partition = %s, value = %s", h.get("kafka_receivedPartitionId"), p));
+                    return null;
+                })
+                .get();
+    }
+
+    private KafkaMessageDrivenChannelAdapterSpec.KafkaMessageDrivenChannelAdapterListenerContainerSpec<Integer, String>
+    createKafkaMessageDrivenChannelAdapter() {
+        return Kafka.messageDrivenChannelAdapter(kafkaConsumerFactory
+                , KafkaMessageDrivenChannelAdapter.ListenerMode.record, TOPIC_NAME)
+                .configureListenerContainer(c ->
+                        c.ackMode(ContainerProperties.AckMode.RECORD)
+                                .idleEventInterval(100L))
+                .recoveryCallback(new ErrorMessageSendingRecoverer(errorChannel
+                        , new RawRecordHeaderErrorMessageStrategy()))
+                .retryTemplate(new RetryTemplate())
+                .filterInRetry(true);
     }
 
 }
