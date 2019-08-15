@@ -6,14 +6,52 @@ services:
   # docker exec -it cp-zookeeper /bin/bash
   #############################################################################
   # 単体 zookeeper
-  cp-zookeeper:
-    image: confluentinc/cp-zookeeper:5.2.2
-    container_name: cp-zookeeper
+  # cp-zookeeper:
+  #   image: confluentinc/cp-zookeeper:5.3.0
+  #   container_name: cp-zookeeper
+  #   ports:
+  #     - "2181:2181"
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+
+  # zookeeper cluster
+  cp-zookeeper1:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper1
     ports:
-      - "2181:2181"
+      - "12181:12181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 12181
       ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: cp-zookeeper1:12888:13888;cp-zookeeper2:22888:23888;cp-zookeeper3:32888:33888
+  cp-zookeeper2:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper2
+    ports:
+      - "22181:22181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: cp-zookeeper1:12888:13888;cp-zookeeper2:22888:23888;cp-zookeeper3:32888:33888
+  cp-zookeeper3:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper3
+    ports:
+      - "32181:32181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: cp-zookeeper1:12888:13888;cp-zookeeper2:22888:23888;cp-zookeeper3:32888:33888
 
   #############################################################################
   # 起動したコンテナに /bin/sh でアクセスする場合には以下のコマンドを実行する
@@ -27,17 +65,94 @@ services:
   # kafka-topics --zookeeper cp-zookeeper:2181 --topic Topic1 --describe
   # kafka-console-producer --broker-list localhost:9092 --topic Topic1
   # kafka-console-consumer --bootstrap-server localhost:9092 --topic Topic1
-  cp-kafka:
-    image: confluentinc/cp-kafka:5.2.2
-    container_name: cp-kafka
+  # cp-kafka:
+  #   image: confluentinc/cp-kafka:5.2.2
+  #   container_name: cp-kafka
+  #   ports:
+  #     - "9092:9092"
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka:29092,PLAINTEXT_HOST://localhost:9092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   depends_on:
+  #     - cp-zookeeper
+
+  # Kafka cluster
+  # docker exec -it cp-kafka1 /bin/bash
+  # topic の作成・一覧取得・詳細表示
+  # kafka-topics --zookeeper cp-zookeeper1:12181 --create --topic Topic1 --partitions 3 --replication-factor 3 --if-not-exists
+  # kafka-topics --zookeeper cp-zookeeper1:12181 --list
+  # kafka-topics --zookeeper cp-zookeeper1:12181 --topic Topic1 --describe
+  # kafka-console-producer --broker-list localhost:19092 --topic Topic1
+  # kafka-console-consumer --bootstrap-server localhost:19092 --topic Topic1
+  #
+  # cp-kafkacat
+  # docker run --rm --name cp-kafkacat --tty --network ksbysample-eipapp-kafka_default confluentinc/cp-kafkacat:5.3.0 kafkacat -b cp-kafka1:19092 -L
+  cp-kafka1:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka1
     ports:
-      - "9092:9092"
+      - "19092:19092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka1:19092
     depends_on:
-      - cp-zookeeper
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+  cp-kafka2:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka2
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka2:29092
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+  cp-kafka3:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka3
+    ports:
+      - "39092:39092"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka3:39092
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+  cp-kafka4:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka4
+    ports:
+      - "49092:49092"
+    environment:
+      KAFKA_BROKER_ID: 4
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka4:49092
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+  cp-kafka5:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka5
+    ports:
+      - "59092:59092"
+    environment:
+      KAFKA_BROKER_ID: 5
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka5:59092
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
