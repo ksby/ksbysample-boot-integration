@@ -8,6 +8,7 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.handler.advice.ErrorMessageSendingRecoverer;
+import org.springframework.integration.handler.advice.RequestHandlerRetryAdvice;
 import org.springframework.integration.kafka.dsl.Kafka;
 import org.springframework.integration.kafka.dsl.KafkaMessageDrivenChannelAdapterSpec;
 import org.springframework.integration.kafka.dsl.KafkaProducerMessageHandlerSpec;
@@ -18,10 +19,14 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+
+import static java.util.Collections.singletonMap;
 
 @Slf4j
 @Configuration
@@ -65,7 +70,8 @@ public class KafkaDslSampleConfig {
                 // kafka_topic ヘッダの topic に送信される
                 // .enrichHeaders(h -> h.header(KafkaHeaders.TOPIC, TOPIC_NAME))
                 .log(LoggingHandler.Level.WARN)
-                .handle(kafkaMessageHandler(kafkaProducerFactory, TOPIC_NAME))
+                .handle(kafkaMessageHandler(kafkaProducerFactory, TOPIC_NAME)
+                        , e -> e.advice(retryAdvice()))
                 .get();
     }
 
@@ -131,8 +137,28 @@ public class KafkaDslSampleConfig {
                                 .idleEventInterval(100L))
                 .recoveryCallback(new ErrorMessageSendingRecoverer(errorChannel
                         , new RawRecordHeaderErrorMessageStrategy()))
-                .retryTemplate(new RetryTemplate())
+                .retryTemplate(retryTemplate())
                 .filterInRetry(true);
+    }
+
+    /**
+     * リトライ回数は最大３回、リトライ前に 5秒待機する RetryTemplate
+     */
+    @Bean
+    public RetryTemplate retryTemplate() {
+        RetryTemplate retryTemplate = new RetryTemplate();
+        retryTemplate.setRetryPolicy(new SimpleRetryPolicy(3, singletonMap(Exception.class, true)));
+        FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
+        fixedBackOffPolicy.setBackOffPeriod(5000);
+        retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
+        return retryTemplate;
+    }
+
+    @Bean
+    public RequestHandlerRetryAdvice retryAdvice() {
+        RequestHandlerRetryAdvice retryAdvice = new RequestHandlerRetryAdvice();
+        retryAdvice.setRetryTemplate(retryTemplate());
+        return retryAdvice;
     }
 
 }
