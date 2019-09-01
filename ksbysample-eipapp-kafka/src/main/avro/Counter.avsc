@@ -1,0 +1,10 @@
+{
+    "namespace": "ksbysample.eipapp.kafka.avro",
+    "type": "record",
+    "name": "Counter",
+    "doc": "???",
+    "fields" : [
+        { "name": "count", "type": "int" },
+        { "name": "fullName", "type": "string" }
+    ]
+}
