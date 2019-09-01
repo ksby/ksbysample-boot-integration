@@ -1,5 +1,6 @@
 package ksbysample.eipapp.kafka;
 
+import ksbysample.eipapp.kafka.avro.Counter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -39,16 +41,18 @@ public class KafkaDslSampleConfig {
     // で生成されている
     //
     // 設定は application.properties の spring.kafka.producer.～ で行う
-    private final ProducerFactory<Integer, String> kafkaProducerFactory;
+    private final ProducerFactory<Integer, Counter> kafkaProducerFactory;
     // 設定は application.properties の spring.kafka.consumer.～ で行う
-    private final ConsumerFactory<Integer, String> kafkaConsumerFactory;
+    private final ConsumerFactory<Integer, Counter> kafkaConsumerFactory;
 
     private final MessageChannel errorChannel;
 
     private AtomicInteger count = new AtomicInteger(0);
 
-    public KafkaDslSampleConfig(ProducerFactory<Integer, String> kafkaProducerFactory
-            , ConsumerFactory<Integer, String> kafkaConsumerFactory
+    private static final String[] FULL_NAMES = new String[]{"田中　太郎", "鈴木　花子", "木村　さくら"};
+
+    public KafkaDslSampleConfig(ProducerFactory<Integer, Counter> kafkaProducerFactory
+            , ConsumerFactory<Integer, Counter> kafkaConsumerFactory
             , MessageChannel errorChannel) {
         this.kafkaProducerFactory = kafkaProducerFactory;
         this.kafkaConsumerFactory = kafkaConsumerFactory;
@@ -56,8 +60,8 @@ public class KafkaDslSampleConfig {
     }
 
     @Bean
-    public Supplier<String> countSupplier() {
-        return () -> String.valueOf(this.count.addAndGet(1));
+    public Supplier<Integer> countSupplier() {
+        return () -> this.count.addAndGet(1);
     }
 
     @Bean
@@ -69,6 +73,10 @@ public class KafkaDslSampleConfig {
                 // kafkaMessageHandler メソッドの第２引数に指定した topic ではなく
                 // kafka_topic ヘッダの topic に送信される
                 // .enrichHeaders(h -> h.header(KafkaHeaders.TOPIC, TOPIC_NAME))
+                .<Integer, Counter>transform(p -> Counter.newBuilder()
+                        .setCount(p)
+                        .setFullName(FULL_NAMES[ThreadLocalRandom.current().nextInt(3)])
+                        .build())
                 .log(LoggingHandler.Level.WARN)
                 .handle(kafkaMessageHandler(kafkaProducerFactory, TOPIC_NAME)
                         , e -> e.advice(retryAdvice()))
@@ -80,8 +88,8 @@ public class KafkaDslSampleConfig {
         return new DefaultKafkaHeaderMapper();
     }
 
-    private KafkaProducerMessageHandlerSpec<Integer, String, ?> kafkaMessageHandler(
-            ProducerFactory<Integer, String> producerFactory, String topic) {
+    private KafkaProducerMessageHandlerSpec<Integer, Counter, ?> kafkaMessageHandler(
+            ProducerFactory<Integer, Counter> producerFactory, String topic) {
         return Kafka
                 .outboundChannelAdapter(producerFactory)
                 .sync(true)
@@ -99,8 +107,9 @@ public class KafkaDslSampleConfig {
     public IntegrationFlow topic1Consumer1Flow() {
         return IntegrationFlows
                 .from(createKafkaMessageDrivenChannelAdapter())
-                .handle((p, h) -> {
-                    log.error(String.format("★★★ partition = %s, value = %s", h.get("kafka_receivedPartitionId"), p));
+                .<Counter>handle((p, h) -> {
+                    log.error(String.format("★★★ partition = %s, count = %s, fullName = %s"
+                            , h.get("kafka_receivedPartitionId"), p.getCount(), p.getFullName()));
                     return null;
                 })
                 .get();
@@ -110,8 +119,9 @@ public class KafkaDslSampleConfig {
     public IntegrationFlow topic1Consumer2Flow() {
         return IntegrationFlows
                 .from(createKafkaMessageDrivenChannelAdapter())
-                .handle((p, h) -> {
-                    log.error(String.format("●●● partition = %s, value = %s", h.get("kafka_receivedPartitionId"), p));
+                .<Counter>handle((p, h) -> {
+                    log.error(String.format("●●● partition = %s, value = %s, fullName = %s"
+                            , h.get("kafka_receivedPartitionId"), p.getCount(), p.getFullName()));
                     return null;
                 })
                 .get();
@@ -121,14 +131,15 @@ public class KafkaDslSampleConfig {
     public IntegrationFlow topic1Consumer3Flow() {
         return IntegrationFlows
                 .from(createKafkaMessageDrivenChannelAdapter())
-                .handle((p, h) -> {
-                    log.error(String.format("▲▲▲ partition = %s, value = %s", h.get("kafka_receivedPartitionId"), p));
+                .<Counter>handle((p, h) -> {
+                    log.error(String.format("▲▲▲ partition = %s, value = %s, fullName = %s"
+                            , h.get("kafka_receivedPartitionId"), p.getCount(), p.getFullName()));
                     return null;
                 })
                 .get();
     }
 
-    private KafkaMessageDrivenChannelAdapterSpec.KafkaMessageDrivenChannelAdapterListenerContainerSpec<Integer, String>
+    private KafkaMessageDrivenChannelAdapterSpec.KafkaMessageDrivenChannelAdapterListenerContainerSpec<Integer, Counter>
     createKafkaMessageDrivenChannelAdapter() {
         return Kafka.messageDrivenChannelAdapter(kafkaConsumerFactory
                 , KafkaMessageDrivenChannelAdapter.ListenerMode.record, TOPIC_NAME)
