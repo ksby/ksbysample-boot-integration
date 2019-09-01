@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.17.0"
+    }
+}
+
 plugins {
     id "org.springframework.boot" version "2.1.6.RELEASE"
     id "java"
@@ -5,6 +15,8 @@ plugins {
 }
 
 apply plugin: "io.spring.dependency-management"
+// com.commercehub.gradle.plugin.avro を追加すると src/main/avro, src/test/avro が作成される
+apply plugin: "com.commercehub.gradle.plugin.avro"
 
 group = "ksbysample.eipapp"
 version = "0.0.1-SNAPSHOT"
@@ -27,6 +39,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
 }
 
 dependencyManagement {
@@ -54,6 +69,14 @@ dependencies {
     // for JUnit 5
     testCompile("org.junit.jupiter:junit-jupiter")
     testRuntime("org.junit.platform:junit-platform-launcher")
+
+    // for Apache Avro
+    implementation("org.apache.avro:avro:1.9.0")
+    implementation("io.confluent:kafka-avro-serializer:5.3.0")
+}
+
+avro {
+    fieldVisibility = "PRIVATE"
 }
 
 test {
