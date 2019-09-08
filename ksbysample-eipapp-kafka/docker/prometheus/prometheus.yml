@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+scrape_configs:
+  - job_name: 'cp-kafka1-jmx'
+    static_configs:
+      - targets:
+          - jmx-prometheus-exporter1:5556
+        labels:
+          instance: 'cp-kafka1'
+  - job_name: 'cp-kafka2-jmx'
+    static_configs:
+      - targets:
+          - jmx-prometheus-exporter2:5556
+        labels:
+          instance: 'cp-kafka2'
+  - job_name: 'cp-kafka3-jmx'
+    static_configs:
+      - targets:
+          - jmx-prometheus-exporter3:5556
+        labels:
+          instance: 'cp-kafka3'
