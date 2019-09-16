@@ -20,3 +20,14 @@ scrape_configs:
           - jmx-prometheus-exporter3:5556
         labels:
           instance: 'cp-kafka3'
+  - job_name: 'kafka-lag-exporter'
+    static_configs:
+      - targets:
+          - kafka-lag-exporter:8000
+  - job_name: 'spring-actuator'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 15s
+    static_configs:
+      # Docker で起動した Prometheus からローカルPCで起動している Spring Boot のアプリケーション
+      # にアクセスするのでローカルPC の IPアドレスを記述する。
+      - targets: ['172.31.16.1:8080']
