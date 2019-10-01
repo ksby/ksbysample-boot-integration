@@ -1,0 +1,40 @@
+# docker-compose -f docker-compose.perftest.yml up -d
+# docker-compose -f docker-compose.perftest.yml down
+version: '3'
+
+services:
+  cp-zookeeper-perf-test:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper-perf-test
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+
+  # kafka-producer-perf-test コマンド実行用
+  # docker exec -it cp-kafka-producer-perf-test /bin/bash
+  cp-kafka-producer-perf-test:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka-producer-perf-test
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper-perf-test:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka-producer-perf-test:9092
+    depends_on:
+      - cp-zookeeper-perf-test
+
+  # kafka-consumer-perf-test コマンド実行用
+  # docker exec -it cp-kafka-consumer-perf-test /bin/bash
+  cp-kafka-consumer-perf-test:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka-consumer-perf-test
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper-perf-test:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka-consumer-perf-test:9092
+    depends_on:
+      - cp-zookeeper-perf-test
+
+networks:
+  default:
+    external:
+      name: ksbysample-eipapp-kafka_default
