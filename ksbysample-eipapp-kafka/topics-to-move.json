@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "topics": [
+    { "topic": "Topic1" },
+    { "topic": "__confluent.support.metrics" },
+    { "topic": "__consumer_offsets" }
+  ]
+}
