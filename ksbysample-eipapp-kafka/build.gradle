@@ -1,0 +1,91 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.17.0"
+    }
+}
+
+plugins {
+    id "org.springframework.boot" version "2.1.6.RELEASE"
+    id "java"
+    id "idea"
+}
+
+apply plugin: "io.spring.dependency-management"
+// com.commercehub.gradle.plugin.avro を追加すると src/main/avro, src/test/avro が作成される
+apply plugin: "com.commercehub.gradle.plugin.avro"
+
+group = "ksbysample.eipapp"
+version = "0.0.1-SNAPSHOT"
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+configurations {
+    // annotationProcessor と testAnnotationProcessor、compileOnly と testCompileOnly を併記不要にする
+    testAnnotationProcessor.extendsFrom annotationProcessor
+    testImplementation.extendsFrom compileOnly
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom("org.junit:junit-bom:5.5.0")
+    }
+}
+
+dependencies {
+    def lombokVersion = "1.18.8"
+
+    implementation("org.springframework.boot:spring-boot-starter-integration")
+//    implementation("org.springframework.boot:spring-boot-starter-json") {
+//        exclude group: "org.springframework", module: "spring-web"
+//    }
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.springframework.integration:spring-integration-kafka:3.1.4.RELEASE")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // for lombok
+    // testAnnotationProcessor、testCompileOnly を併記しなくてよいよう configurations で設定している
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+
+    // for JUnit 5
+    testCompile("org.junit.jupiter:junit-jupiter")
+    testRuntime("org.junit.platform:junit-platform-launcher")
+
+    // for Apache Avro
+    implementation("org.apache.avro:avro:1.9.0")
+    implementation("io.confluent:kafka-avro-serializer:5.3.0")
+}
+
+avro {
+    fieldVisibility = "PRIVATE"
+}
+
+test {
+    // for JUnit 5
+    useJUnitPlatform()
+    testLogging {
+        events "STARTED", "PASSED", "FAILED", "SKIPPED"
+    }
+}

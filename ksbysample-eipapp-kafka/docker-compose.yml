@@ -1,0 +1,290 @@
+version: '3'
+
+services:
+  #############################################################################
+  # 起動したコンテナに /bin/sh でアクセスする場合には以下のコマンドを実行する
+  # docker exec -it cp-zookeeper /bin/bash
+  #############################################################################
+  # 単体 zookeeper
+  # cp-zookeeper:
+  #   image: confluentinc/cp-zookeeper:5.3.0
+  #   container_name: cp-zookeeper
+  #   ports:
+  #     - "2181:2181"
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+
+  # zookeeper cluster
+  cp-zookeeper1:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper1
+    ports:
+      - "12181:12181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 12181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: cp-zookeeper1:12888:13888;cp-zookeeper2:22888:23888;cp-zookeeper3:32888:33888
+  cp-zookeeper2:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper2
+    ports:
+      - "22181:22181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: cp-zookeeper1:12888:13888;cp-zookeeper2:22888:23888;cp-zookeeper3:32888:33888
+  cp-zookeeper3:
+    image: confluentinc/cp-zookeeper:5.3.0
+    container_name: cp-zookeeper3
+    ports:
+      - "32181:32181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: cp-zookeeper1:12888:13888;cp-zookeeper2:22888:23888;cp-zookeeper3:32888:33888
+
+  #############################################################################
+  # 起動したコンテナに /bin/sh でアクセスする場合には以下のコマンドを実行する
+  # docker exec -it cp-kafka /bin/bash
+  #############################################################################
+  # 単体 Kafka
+  # topic の作成・一覧取得・詳細表示
+  # kafka-topics --zookeeper cp-zookeeper:2181 --create --topic Topic1 --partitions 1 --replication-factor 1 --if-not-exists
+  # kafka-topics --zookeeper cp-zookeeper:2181 --alter --topic Topic1 --partitions 3
+  # kafka-topics --zookeeper cp-zookeeper:2181 --list
+  # kafka-topics --zookeeper cp-zookeeper:2181 --topic Topic1 --describe
+  # kafka-console-producer --broker-list localhost:9092 --topic Topic1
+  # kafka-console-consumer --bootstrap-server localhost:9092 --topic Topic1
+  # cp-kafka:
+  #   image: confluentinc/cp-kafka:5.2.2
+  #   container_name: cp-kafka
+  #   ports:
+  #     - "9092:9092"
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka:29092,PLAINTEXT_HOST://localhost:9092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   depends_on:
+  #     - cp-zookeeper
+
+  # Kafka cluster
+  # docker exec -it cp-kafka1 /bin/bash
+  # topic の作成・一覧取得・詳細表示
+  # kafka-topics --zookeeper cp-zookeeper1:12181 --create --topic Topic1 --partitions 3 --replication-factor 3 --if-not-exists
+  # kafka-topics --zookeeper cp-zookeeper1:12181 --list
+  # kafka-topics --zookeeper cp-zookeeper1:12181 --topic Topic1 --describe
+  # kafka-console-producer --broker-list localhost:19092 --topic Topic1
+  # kafka-console-consumer --bootstrap-server localhost:19092 --topic Topic1
+  #
+  # cp-kafkacat
+  # docker run --rm --name cp-kafkacat --tty --network ksbysample-eipapp-kafka_default confluentinc/cp-kafkacat:5.3.0 kafkacat -b cp-kafka1:19092 -L
+  cp-kafka1:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka1
+    ports:
+      - "19092:19092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka1:19092
+      KAFKA_JMX_PORT: 9991
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+  cp-kafka2:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka2
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka2:29092
+      KAFKA_JMX_PORT: 9991
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+  cp-kafka3:
+    image: confluentinc/cp-kafka:5.3.0
+    container_name: cp-kafka3
+    ports:
+      - "39092:39092"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka3:39092
+      KAFKA_JMX_PORT: 9991
+    depends_on:
+      - cp-zookeeper1
+      - cp-zookeeper2
+      - cp-zookeeper3
+#  cp-kafka4:
+#    image: confluentinc/cp-kafka:5.3.0
+#    container_name: cp-kafka4
+#    ports:
+#      - "49092:49092"
+#    environment:
+#      KAFKA_BROKER_ID: 4
+#      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka4:49092
+#      KAFKA_JMX_PORT: 9991
+#    depends_on:
+#      - cp-zookeeper1
+#      - cp-zookeeper2
+#      - cp-zookeeper3
+#  cp-kafka5:
+#    image: confluentinc/cp-kafka:5.3.0
+#    container_name: cp-kafka5
+#    ports:
+#      - "59092:59092"
+#    environment:
+#      KAFKA_BROKER_ID: 5
+#      KAFKA_ZOOKEEPER_CONNECT: cp-zookeeper1:12181,cp-zookeeper2:22181,cp-zookeeper3:32181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://cp-kafka5:59092
+#      KAFKA_JMX_PORT: 9991
+#    depends_on:
+#      - cp-zookeeper1
+#      - cp-zookeeper2
+#      - cp-zookeeper3
+
+  # Schema Registry
+  # docker exec -it cp-schema-registry1 /bin/bash
+  # kafka-avro-console-consumer --topic Topic1 --bootstrap-server cp-kafka1:19092 --property schema.registry.url=http://localhost:8081
+  # curl -X GET http://localhost:8081/subjects
+  # curl -X GET http://localhost:8081/subjects/Topic1-value/versions
+  # curl -X GET http://localhost:8081/subjects/Topic1-value/versions/1
+  # curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema":"{\"type\":\"record\",\"name\":\"Counter\",\"namespace\":\"ksbysample.eipapp.kafka.avro\",\"doc\":\"???\",\"fields\":[{\"name\":\"count\",\"type\":\"int\"},{\"name\":\"fullName\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}"}' http://localhost:8081/subjects/Topic1-value/versions
+  cp-schema-registry1:
+    image: confluentinc/cp-schema-registry:5.3.0
+    container_name: cp-schema-registry1
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: cp-schema-registry1
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "cp-kafka1:19092,cp-kafka2:29092,cp-kafka3:39092"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
+    depends_on:
+      - cp-kafka1
+      - cp-kafka2
+      - cp-kafka3
+    # broker の登録が完了する前にタイムアウトでコンテナが終了してしまう場合があるので restart: always を指定する
+    restart: always
+  cp-schema-registry2:
+    image: confluentinc/cp-schema-registry:5.3.0
+    container_name: cp-schema-registry2
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: cp-schema-registry2
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "cp-kafka1:19092,cp-kafka2:29092,cp-kafka3:39092"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
+    depends_on:
+      - cp-schema-registry1
+    # broker の登録が完了する前にタイムアウトでコンテナが終了してしまう場合があるので restart: always を指定する
+    restart: always
+  cp-schema-registry3:
+    image: confluentinc/cp-schema-registry:5.3.0
+    container_name: cp-schema-registry3
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: cp-schema-registry3
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "cp-kafka1:19092,cp-kafka2:29092,cp-kafka3:39092"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
+    depends_on:
+      - cp-schema-registry1
+    # broker の登録が完了する前にタイムアウトでコンテナが終了してしまう場合があるので restart: always を指定する
+    restart: always
+  # http://localhost:1936/haproxy-cp-schema-registry?stats
+  haproxy-cp-schema-registry:
+    image: haproxy:2.0.5-alpine
+    container_name: haproxy-cp-schema-registry
+    ports:
+      - "1936:1936"
+      - "8081:8081"
+    environment:
+      - TZ=Asia/Tokyo
+    volumes:
+      - ./docker/cp-schema-registry/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - cp-schema-registry1
+      - cp-schema-registry2
+      - cp-schema-registry3
+
+  # Docker JMX exporter for Prometheus
+  # https://hub.docker.com/r/sscaling/jmx-prometheus-exporter
+  # https://github.com/prometheus/jmx_exporter
+  jmx-prometheus-exporter1:
+    image: sscaling/jmx-prometheus-exporter:0.12.0
+    container_name: jmx-prometheus-exporter1
+    # Docker Network 内で通信できればよいので ports は設定しないが、動作確認したい時はコメントアウトを
+    # 解除する
+    # ports:
+    #   - "5556:5556"
+    volumes:
+      - ./docker/jmx-prometheus-exporter/cp-kafka1-config.yml:/opt/jmx_exporter/config.yml
+    depends_on:
+      - cp-kafka1
+  jmx-prometheus-exporter2:
+    image: sscaling/jmx-prometheus-exporter:0.12.0
+    container_name: jmx-prometheus-exporter2
+    volumes:
+      - ./docker/jmx-prometheus-exporter/cp-kafka2-config.yml:/opt/jmx_exporter/config.yml
+    depends_on:
+      - cp-kafka2
+  jmx-prometheus-exporter3:
+    image: sscaling/jmx-prometheus-exporter:0.12.0
+    container_name: jmx-prometheus-exporter3
+    volumes:
+      - ./docker/jmx-prometheus-exporter/cp-kafka3-config.yml:/opt/jmx_exporter/config.yml
+    depends_on:
+      - cp-kafka3
+
+  kafka-lag-exporter:
+    image: lightbend/kafka-lag-exporter:0.5.1
+    container_name: kafka-lag-exporter
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker/kafka-lag-exporter/conf:/opt/docker/conf
+    command:
+      - /bin/sh
+      - -c
+      - |
+        /opt/docker/bin/kafka-lag-exporter \
+                    -Dconfig.file=/opt/docker/conf/application.conf \
+                    -Dlogback.configurationFile=/opt/docker/conf/logback.xml
+    depends_on:
+      - cp-kafka1
+      - cp-kafka2
+      - cp-kafka3
+
+  prometheus:
+    image: prom/prometheus:v2.12.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:6.3.5
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - TZ=Asia/Tokyo
+    volumes:
+      - ./docker/grafana/storage:/var/lib/grafana
