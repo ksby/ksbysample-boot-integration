@@ -1,0 +1,60 @@
+buildscript {
+    ext {
+        group "ksbysample.eipapp.ksbysample-eipapp-kafkastreams"
+        version "0.0.1-SNAPSHOT"
+    }
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id "org.springframework.boot" version "2.1.9.RELEASE"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "java"
+    id "idea"
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom("org.junit:junit-bom:5.5.2")
+    }
+}
+
+dependencies {
+    def kafkaVersion = "2.3.0"
+
+    implementation("org.springframework.boot:spring-boot-starter-integration")
+    implementation("org.springframework.integration:spring-integration-kafka:3.2.0.RELEASE")
+    implementation("org.apache.kafka:kafka-clients:${kafkaVersion}")
+    implementation("org.apache.kafka:kafka-streams:${kafkaVersion}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // for JUnit 5
+    testCompile("org.junit.jupiter:junit-jupiter")
+    testRuntime("org.junit.platform:junit-platform-launcher")
+}
+
+test {
+    // for JUnit 5
+    useJUnitPlatform()
+    testLogging {
+        events "STARTED", "PASSED", "FAILED", "SKIPPED"
+    }
+}
