@@ -1,0 +1,79 @@
+buildscript {
+    ext {
+        group "ksbysample.eipapp.ksbysample-eipapp-kafkastreams"
+        version "0.0.1-SNAPSHOT"
+    }
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.17.0"
+    }
+}
+
+plugins {
+    id "org.springframework.boot" version "2.1.9.RELEASE"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "java"
+    id "idea"
+}
+
+// com.commercehub.gradle.plugin.avro を追加すると src/main/avro, src/test/avro が作成される
+// はずだが Gradle Multi-project にしていると作成されなかったので、手動で作成すること
+apply plugin: "com.commercehub.gradle.plugin.avro"
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom("org.junit:junit-bom:5.5.2")
+    }
+}
+
+dependencies {
+    def kafkaVersion = "2.3.0"
+    def confluentKafkaVersion = "5.3.0"
+
+    implementation("org.springframework.boot:spring-boot-starter-integration")
+    implementation("org.springframework.integration:spring-integration-kafka:3.2.0.RELEASE")
+    implementation("org.apache.kafka:kafka-clients:${kafkaVersion}")
+    implementation("org.apache.kafka:kafka-streams:${kafkaVersion}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // for JUnit 5
+    testCompile("org.junit.jupiter:junit-jupiter")
+    testRuntime("org.junit.platform:junit-platform-launcher")
+
+    // for Apache Avro
+    implementation("org.apache.avro:avro:1.9.0")
+    implementation("io.confluent:kafka-streams-avro-serde:${confluentKafkaVersion}")
+}
+
+avro {
+    fieldVisibility = "PRIVATE"
+}
+
+test {
+    // for JUnit 5
+    useJUnitPlatform()
+    testLogging {
+        events "STARTED", "PASSED", "FAILED", "SKIPPED"
+    }
+}

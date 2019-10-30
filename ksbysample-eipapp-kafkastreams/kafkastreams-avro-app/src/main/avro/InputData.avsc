@@ -1,0 +1,10 @@
+{
+    "namespace": "ksbysample.eipapp.kafkastreams.avroapp.avro",
+    "type": "record",
+    "name": "InputData",
+    "doc": "???",
+    "fields" : [
+        { "name": "str", "type": "string" },
+        { "name": "length", "type": "int" }
+    ]
+}
